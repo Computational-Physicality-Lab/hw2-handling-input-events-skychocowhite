@@ -1,0 +1,369 @@
+/* Your Code Here */
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  font-family: "Open Sans", sans-serif;
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+.openSansFont {
+  font-family: "Open Sans", sans-serif;
+}
+
+header {
+  border-top: 2rem solid #c51230;
+  border-bottom: 1px solid gray;
+}
+
+.headerBanner {
+  height: 80%;
+  display: flex;
+  column-gap: 3.5rem;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid gray;
+}
+
+#headerLogo {
+  max-width: 40%;
+}
+
+#headerLogo img {
+  height: 5rem;
+  margin-left: 1rem;
+  transition-duration: 0.2s;
+}
+
+#headerLogo img:hover {
+  border-bottom: 5px solid gray;
+}
+
+#companyName {
+  font-size: 3rem;
+  font-weight: bold;
+  font-family: 'Catamaran', sans-serif;
+}
+
+.headerCart div {
+  max-width: 100%;
+  max-height: 4rem;
+  display: flex;
+  column-gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin-right: 1rem;
+  background-color: #c51230;
+  border-radius: 10px;
+  transition-duration: 0.2s;
+  border: 3px solid transparent;
+}
+
+.headerCart:hover div {
+  background-color: white;
+  border: 3px solid #c51230;
+}
+
+.headerCart img {
+  height: 2.5rem;
+  filter: invert(100%);
+  transition-duration: 0.2s;
+}
+
+.headerCart:hover img {
+  filter: invert(13%) sepia(51%) saturate(6619%) hue-rotate(344deg) brightness(99%) contrast(98%);
+}
+
+.headerCart p {
+  font-size: 1.5rem;
+  color: white;
+  transition-duration: 0.2s;
+}
+
+.headerCart:hover p {
+  color: #c51230;
+}
+
+.menu {
+  height: 3rem;
+  font-family: 'Catamaran', sans-serif;
+  display: flex;
+  column-gap: 3.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu a {
+  color: #c51230;
+  transition-duration: 0.2s;
+}
+
+.menu a:hover {
+  color: red;
+  border-bottom: 5px solid red;
+}
+
+footer {
+  font-family: "Open Sans", sans-serif;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: #c51230;
+}
+
+footer a {
+  color: white;
+  transition-duration: 0.2s;
+}
+
+footer a:hover {
+  border-bottom: 5px solid white;
+}
+
+footer p {
+  color: white;
+  font-weight: bold;
+}
+
+/* Homepage */
+#homepageLogo {
+  height: auto;
+  width: 100%;
+}
+
+.homepageIntroduction {
+  display: flex;
+  column-gap: 5%;
+  justify-content: center;
+  margin: 1rem auto;
+}
+
+.homepageIntroduction div {
+  border: 4px solid #c51230;
+  padding: 1rem;
+  width: 30%;
+  font-family: "Open Sans", sans-serif;
+  border-radius: 10px;
+}
+
+.homepageIntroductionTitle {
+  color: #c51230;
+  font-size: large;
+}
+
+.homepageIntroductionDescription {
+  color: gray;
+  font-size: small;
+}
+
+/* Not implemented page */
+#notImplementedImg {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 50%;
+}
+
+#notImplementedMsg {
+  text-align: center;
+  font-family: "Open Sans", sans-serif;
+  color: gray;
+  padding: 1rem;
+}
+
+/* Shirt products page */
+.shirtsSection {
+  width: 75%;
+  margin: auto;
+  margin-bottom: 3rem;
+}
+
+.shirtsSection h2 {
+  font-family: "Open Sans", sans-serif;
+}
+
+.shirtsList {
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  column-gap: 1.5rem;
+  row-gap: 1.5rem;
+}
+
+.shirt {
+  max-width: 30%;
+  border: 4px solid #c51230;
+  border-radius: 10px;
+}
+
+.shirt img {
+  width: 100%;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  transition-duration: 0.2s;
+}
+
+.shirt img:hover {
+  box-shadow: 0 0 10px 0 #c51230;
+}
+
+.shirt p {
+  padding-left: 1rem;
+  font-family: "Open Sans", sans-serif;
+}
+
+.shirtName {
+  color: #c51230;
+  font-size: larger;
+}
+
+.shirtColorCounts {
+  color: gray;
+}
+
+.shirtButtons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.shirtButtons a {
+  background-color: #c51230;
+  padding: 2% 5%;
+  border: 3px solid #c51230;
+  border-radius: 5px;
+  margin: 1rem auto;
+  text-align: center;
+  color: white;
+  transition-duration: 0.2s;
+}
+
+.shirtButtons a:hover {
+  background-color: white;
+  color: #c51230;
+}
+
+.quickView {
+  display: none;
+  background-color: rgb(215, 215, 215);
+  justify-content: center;
+}
+
+.quickViewImgs {
+  justify-content: center;
+  max-width: 45%;
+  margin: 1% 0;
+}
+
+.quickViewImgs img {
+  max-width: 45%;
+  transition-duration: 0.2s;
+}
+
+.quickViewImgs:hover img {
+  box-shadow: 0 0 10px 0 #c51230;
+}
+
+.quickViewInformation {
+  max-width: 45%;
+  margin: 1% 0
+}
+
+#quickViewName {
+  font-size: 250%;
+}
+
+#quickViewPrice {
+  font-size: 150%;
+  color: #c51230;
+}
+
+#quickViewDescription {
+  font-size: small;
+  color: #c51230;
+  margin-bottom: 2rem;
+}
+
+.quickViewInformation a {
+  color: white;
+  background-color: #c51230;
+  padding: 5px 10px;
+  max-width: 30%;
+  border: 3px solid #c51230;
+  border-radius: 7px;
+  transition-duration: 0.2s;
+}
+
+.quickViewInformation a:hover {
+  color: #c51230;
+  background-color: rgb(215, 215, 215);
+}
+
+/* Shirt details page */
+.shirtDetailSection {
+  width: 70%;
+  margin: 1rem auto;
+}
+
+.shirtInformation {
+  display: flex;
+  column-gap: 2rem;
+}
+
+.shirtInformation p {
+  margin: 2.5rem auto;
+}
+
+#shirtPrice {
+  font-size: 2rem;
+  color: #c51230;
+}
+
+#shirtDescription {
+  color: #c51230;
+}
+
+#shirtSide,
+#shirtColor {
+  color: gray;
+}
+
+.shirtSideButton {
+  color: white;
+  background-color: #c51230;
+  padding: 5px 15px;
+  margin: auto 8px;
+  border: 3px solid transparent;
+  border-radius: 5px;
+  transition-duration: 0.2s;
+}
+
+.shirtSideButton:hover {
+  color: #c51230;
+  background-color: white;
+  border: 3px solid #c51230;
+}
+
+.shirtColorButton {
+  padding: 5px 15px;
+  margin: auto 8px;
+  border: 3px solid #c51230;
+  border-radius: 5px;
+  transition-duration: 0.2s;
+}
+
+.shirtColorButton:hover {
+  color: #c51230;
+  background-color: white;
+}
