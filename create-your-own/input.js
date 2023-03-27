@@ -145,6 +145,6 @@ targetList.forEach((target, idx) => {
   target.addEventListener('click', targetClickEvent);
   target.addEventListener('dblclick', targetDblClickEvent);
 
-  target.addEventListener('touchstart', targetMouseDownEvent);
-  target.addEventListener('touchend', targetMouseUpEvent);
+  // target.addEventListener('touchstart', targetMouseDownEvent);
+  // target.addEventListener('touchend', targetMouseUpEvent);
 });
