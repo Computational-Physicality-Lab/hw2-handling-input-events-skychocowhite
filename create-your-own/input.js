@@ -45,16 +45,17 @@ const workspaceMouseMoveEvent = function (event) {
     let topPosition = parseInt(mouseDownTarget.style.top.substring(0, mouseDownTarget.style.top.length - 2));
     let leftPosition = parseInt(mouseDownTarget.style.left.substring(0, mouseDownTarget.style.left.length - 2));
 
+    console.log(targetMouseY, targetMouseX);
     if (event.type === 'mousemove') {
       topPosition = "" + (topPosition + event.clientY - targetMouseY) + "px";
-      leftPositiion = "" + (leftPosition + event.clientX - targetMouseX) + "px";
+      leftPosition = "" + (leftPosition + event.clientX - targetMouseX) + "px";
     }
     else if (event.type === 'touchmove') {
       topPosition = "" + (topPosition + event.touches[0].clientY - targetMouseY) + "px";
       leftPosition = "" + (leftPosition + event.touches[0].clientX - targetMouseX) + "px";
     }
 
-
+    console.log(topPosition, leftPosition);
     mouseDownTarget.style.top = topPosition;
     mouseDownTarget.style.left = leftPosition;
 
@@ -103,6 +104,7 @@ const targetMouseDownEvent = function (event) {
   isTargetMouseDown = true;
   isTargetMouseMove = false;
   mouseDownTarget = event.target;
+
   if (event.type === 'mousedown') {
     targetMouseX = event.clientX;
     targetMouseY = event.clientY;
@@ -111,6 +113,7 @@ const targetMouseDownEvent = function (event) {
     targetMouseX = event.touches[0].clientX;
     targetMouseY = event.touches[0].clientY;
   }
+
   originTargetTop = event.target.style.top;
   originTargetLeft = event.target.style.left;
 };
