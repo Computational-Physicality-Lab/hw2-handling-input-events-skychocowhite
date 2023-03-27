@@ -135,6 +135,8 @@ workspace.addEventListener('mousemove', workspaceMouseMoveEvent);
 workspace.addEventListener('mouseup', workspaceMouseUpEvent);
 workspace.addEventListener('click', workspaceMouseClickEvent);
 
+workspace.addEventListener('touchmove', workspaceMouseMoveEvent);
+
 targetList.forEach((target, idx) => {
   target.addEventListener('mousedown', targetMouseDownEvent);
   target.addEventListener('mouseup', targetMouseUpEvent);
