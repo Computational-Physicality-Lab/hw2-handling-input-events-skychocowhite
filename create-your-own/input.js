@@ -45,26 +45,36 @@ const workspaceMouseMoveEvent = function (event) {
     let topPosition = parseInt(mouseDownTarget.style.top.substring(0, mouseDownTarget.style.top.length - 2));
     let leftPosition = parseInt(mouseDownTarget.style.left.substring(0, mouseDownTarget.style.left.length - 2));
 
-    if (event.type === 'mousemove') {
-      topPosition = "" + (topPosition + event.clientY - targetMouseY) + "px";
-      leftPosition = "" + (leftPosition + event.clientX - targetMouseX) + "px";
-    }
-    else if (event.type === 'touchmove') {
-      topPosition = "" + (topPosition + event.touches[0].clientY - targetMouseY) + "px";
-      leftPosition = "" + (leftPosition + event.touches[0].clientX - targetMouseX) + "px";
-    }
-
+    topPosition = "" + (topPosition + event.clientY - targetMouseY) + "px";
+    leftPosition = "" + (leftPosition + event.clientX - targetMouseX) + "px";
     mouseDownTarget.style.top = topPosition;
     mouseDownTarget.style.left = leftPosition;
+    targetMouseX = event.clientX;
+    targetMouseY = event.clientY;
+  }
+};
 
-    if (event.type === 'mousemove') {
-      targetMouseX = event.clientX;
-      targetMouseY = event.clientY;
-    }
-    else if (event.type === 'touchmove') {
-      targetMouseX = event.touches[0].clientX;
-      targetMouseY = event.touches[0].clientY;
-    }
+const workspaceTouchMoveEvent = function (event) {
+  if (isWorkspaceMouseDown &&
+    (workspaceMouseX !== event.clientX || workspaceMouseY !== event.clientY)) {
+    isWorkspaceMouseMove = true;
+  }
+
+  if ((isTargetMouseDown || targetFollowMode) &&
+    (targetMouseX !== event.clientX || targetMouseY !== event.clientY)) {
+    isTargetMouseMove = true;
+  }
+
+  if (isTargetMouseDown || targetFollowMode) {
+    let topPosition = parseInt(mouseDownTarget.style.top.substring(0, mouseDownTarget.style.top.length - 2));
+    let leftPosition = parseInt(mouseDownTarget.style.left.substring(0, mouseDownTarget.style.left.length - 2));
+
+    topPosition = "" + (topPosition + event.touches[event.touches.length - 1].clientY - targetMouseY) + "px";
+    leftPosition = "" + (leftPosition + event.touches[event.touches.length - 1].clientX - targetMouseX) + "px";
+    mouseDownTarget.style.top = topPosition;
+    mouseDownTarget.style.left = leftPosition;
+    targetMouseX = event.touches[event.touches.length - 1].clientX;
+    targetMouseY = event.touches[event.touches.length - 1].clientY;
   }
 };
 
@@ -98,20 +108,23 @@ const workspaceKeyboardEscapeEvent = function (event) {
   mouseDownTarget = undefined;
 };
 
+const workspaceTouchStartEvent = function (event) {
+  isWorkspaceMouseDown = true;
+  isWorkspaceMouseMove = false;
+  workspaceMouseX = event.touches[event.touches.length - 1].clientX;
+  workspaceMouseY = event.touches[event.touches.length - 1].clientY;
+};
+
+const workspaceTouchEndEvent = function (event) {
+  isWorkspaceMouseDown = false;
+};
+
 const targetMouseDownEvent = function (event) {
   isTargetMouseDown = true;
   isTargetMouseMove = false;
   mouseDownTarget = event.target;
-
-  if (event.type === 'mousedown') {
-    targetMouseX = event.clientX;
-    targetMouseY = event.clientY;
-  }
-  else if (event.type === 'touchstart') {
-    targetMouseX = event.touches[0].clientX;
-    targetMouseY = event.touches[0].clientY;
-  }
-
+  targetMouseX = event.clientX;
+  targetMouseY = event.clientY;
   originTargetTop = event.target.style.top;
   originTargetLeft = event.target.style.left;
 };
@@ -149,6 +162,23 @@ const targetDblClickEvent = function (event) {
   mouseDownTarget = event.target;
 };
 
+const targetTouchStartEvent = function (event) {
+  isTargetMouseDown = true;
+  isTargetMouseMove = false;
+  mouseDownTarget = event.target;
+  targetMouseX = event.touches[event.touches.length - 1].clientX;
+  targetMouseY = event.touches[event.touches.length - 1].clientY;
+  originTargetTop = event.target.style.top;
+  originTargetLeft = event.target.style.left;
+};
+
+const targetTouchEndEvent = function (event) {
+  isTargetMouseDown = false;
+  if (isTargetMouseMove || targetFollowMode) {
+    mouseDownTarget = undefined;
+  }
+};
+
 workspace.setAttribute('tabindex', -1);
 workspace.focus();
 workspace.addEventListener('keydown', workspaceKeyboardEscapeEvent);
@@ -157,9 +187,9 @@ workspace.addEventListener('mousemove', workspaceMouseMoveEvent);
 workspace.addEventListener('mouseup', workspaceMouseUpEvent);
 workspace.addEventListener('click', workspaceMouseClickEvent);
 
-workspace.addEventListener('touchstart', workspaceMouseDownEvent);
-workspace.addEventListener('touchmove', workspaceMouseMoveEvent);
-workspace.addEventListener('touchend', workspaceMouseUpEvent);
+workspace.addEventListener('touchstart', workspaceTouchStartEvent);
+workspace.addEventListener('touchmove', workspaceTouchMoveEvent);
+workspace.addEventListener('touchend', workspaceTouchEndEvent);
 
 targetList.forEach((target, idx) => {
   target.addEventListener('mousedown', targetMouseDownEvent);
@@ -167,6 +197,6 @@ targetList.forEach((target, idx) => {
   target.addEventListener('click', targetClickEvent);
   target.addEventListener('dblclick', targetDblClickEvent);
 
-  target.addEventListener('touchstart', targetMouseDownEvent);
-  target.addEventListener('touchend', targetMouseUpEvent);
+  target.addEventListener('touchstart', targetTouchStartEvent);
+  target.addEventListener('touchend', targetTouchEndEvent);
 });
