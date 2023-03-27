@@ -135,7 +135,7 @@ workspace.addEventListener('mousemove', workspaceMouseMoveEvent);
 workspace.addEventListener('mouseup', workspaceMouseUpEvent);
 workspace.addEventListener('click', workspaceMouseClickEvent);
 
-// workspace.addEventListener('touchstart', workspaceMouseDownEvent);
+workspace.addEventListener('touchstart', workspaceMouseDownEvent);
 workspace.addEventListener('touchmove', workspaceMouseMoveEvent);
 // workspace.addEventListener('touchend', workspaceMouseUpEvent);
 
@@ -145,6 +145,6 @@ targetList.forEach((target, idx) => {
   target.addEventListener('click', targetClickEvent);
   target.addEventListener('dblclick', targetDblClickEvent);
 
-  // target.addEventListener('touchstart', targetMouseDownEvent);
+  target.addEventListener('touchstart', targetMouseDownEvent);
   // target.addEventListener('touchend', targetMouseUpEvent);
 });
