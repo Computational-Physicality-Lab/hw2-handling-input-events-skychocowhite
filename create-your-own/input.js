@@ -45,7 +45,6 @@ const workspaceMouseMoveEvent = function (event) {
     let topPosition = parseInt(mouseDownTarget.style.top.substring(0, mouseDownTarget.style.top.length - 2));
     let leftPosition = parseInt(mouseDownTarget.style.left.substring(0, mouseDownTarget.style.left.length - 2));
 
-    console.log(targetMouseY, targetMouseX);
     if (event.type === 'mousemove') {
       topPosition = "" + (topPosition + event.clientY - targetMouseY) + "px";
       leftPosition = "" + (leftPosition + event.clientX - targetMouseX) + "px";
@@ -55,7 +54,6 @@ const workspaceMouseMoveEvent = function (event) {
       leftPosition = "" + (leftPosition + event.touches[0].clientX - targetMouseX) + "px";
     }
 
-    console.log(topPosition, leftPosition);
     mouseDownTarget.style.top = topPosition;
     mouseDownTarget.style.left = leftPosition;
 
