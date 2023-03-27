@@ -49,10 +49,10 @@ clearButton.addEventListener(
 );
 
 target.addEventListener("click", (e) => {
-  let notpropogate ="";
-  if (e.detail>= 3) notpropogate = " - not propogating";
-  printOutEvent("click ("+e.detail+")"+notpropogate);
-  if (e.detail>= 3) e.stopPropagation();
+  let notpropogate = "";
+  if (e.detail >= 3) notpropogate = " - not propogating";
+  printOutEvent("click (" + e.detail + ")" + notpropogate);
+  if (e.detail >= 3) e.stopPropagation();
 }, false);
 target.addEventListener("dblclick", () => printOutEvent("dbclick"), false);
 target.addEventListener("mousedown", () => printOutEvent("mousedown"), false);
@@ -80,7 +80,7 @@ target.addEventListener(
 
 workarea.addEventListener(
   "click",
-  (e) => printOutEvent("click ("+e.detail+")", "workarea"),
+  (e) => printOutEvent("click (" + e.detail + ")", "workarea"),
   false
 );
 workarea.addEventListener(
@@ -133,7 +133,7 @@ workarea.addEventListener(
 captureworkarea.addEventListener(
   "click",
   (e) => {
-     printOutEvent("click CAPTURING ("+e.detail+")", "workarea");
+    printOutEvent("click CAPTURING (" + e.detail + ")", "workarea");
   },
   true //so this one gets events on way down, so workarea will be BEFORE target
 );
