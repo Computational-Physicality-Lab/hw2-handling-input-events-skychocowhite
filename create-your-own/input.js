@@ -44,13 +44,28 @@ const workspaceMouseMoveEvent = function (event) {
   if (isTargetMouseDown || targetFollowMode) {
     let topPosition = parseInt(mouseDownTarget.style.top.substring(0, mouseDownTarget.style.top.length - 2));
     let leftPosition = parseInt(mouseDownTarget.style.left.substring(0, mouseDownTarget.style.left.length - 2));
-    let topOffset = "" + (parseInt(topPosition) + event.clientY - targetMouseY) + "px";
-    let leftOffset = "" + (parseInt(leftPosition) + event.clientX - targetMouseX) + "px";
 
-    mouseDownTarget.style.top = topOffset;
-    mouseDownTarget.style.left = leftOffset;
-    targetMouseX = event.clientX;
-    targetMouseY = event.clientY;
+    if (event.type === 'mousemove') {
+      topPosition = "" + (topPosition + event.clientY - targetMouseY) + "px";
+      leftPositiion = "" + (leftPosition + event.clientX - targetMouseX) + "px";
+    }
+    else if (event.type === 'touchmove') {
+      topPosition = "" + (topPosition + event.touches[0].clientY - targetMouseY) + "px";
+      leftPosition = "" + (leftPosition + event.touches[0].clientX - targetMouseX) + "px";
+    }
+
+
+    mouseDownTarget.style.top = topPosition;
+    mouseDownTarget.style.left = leftPosition;
+
+    if (event.type === 'mousemove') {
+      targetMouseX = event.clientX;
+      targetMouseY = event.clientY;
+    }
+    else if (event.type === 'touchmove') {
+      targetMouseX = event.touches[0].clientX;
+      targetMouseY = event.touches[0].clientY;
+    }
   }
 };
 
@@ -88,8 +103,14 @@ const targetMouseDownEvent = function (event) {
   isTargetMouseDown = true;
   isTargetMouseMove = false;
   mouseDownTarget = event.target;
-  targetMouseX = event.clientX;
-  targetMouseY = event.clientY;
+  if (event.type === 'mousedown') {
+    targetMouseX = event.clientX;
+    targetMouseY = event.clientY;
+  }
+  else if (event.type === 'touchstart') {
+    targetMouseX = event.touches[0].clientX;
+    targetMouseY = event.touches[0].clientY;
+  }
   originTargetTop = event.target.style.top;
   originTargetLeft = event.target.style.left;
 };
