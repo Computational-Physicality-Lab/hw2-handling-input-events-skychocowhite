@@ -184,6 +184,8 @@ function targetMouseUpEvent(event) {
   }
 }
 
+let lastTouchTime = 0;
+
 function targetClickEvent(event) {
   console.log("target: " + event.type);
   preEvent = event;
@@ -199,6 +201,24 @@ function targetClickEvent(event) {
     return;
   }
 
+  let currentTime = new Date().getTime();
+  let clickTimeOffset = currentTime - lastTouchTime;
+  if (clickTimeOffset < 500) {
+    event.stopPropagation();
+
+    // console.log("target: " + event.type);
+    // preEvent = event;
+    console.log('target: double click event');
+    if (isTargetMouseMove) {
+      isTargetMouseMove = false;
+      return;
+    }
+    targetFollowMode = true;
+    mouseDownTarget = event.target;
+    return;
+  }
+
+  lastTouchTime = currentTime;
   if (clickedTarget !== event.clickedTarget) {
     clickedTarget.style.backgroundColor = 'red';
   }
@@ -207,17 +227,17 @@ function targetClickEvent(event) {
   event.stopPropagation();
 }
 
-function targetDblClickEvent(event) {
-  console.log("target: " + event.type);
-  preEvent = event;
+// function targetDblClickEvent(event) {
+//   console.log("target: " + event.type);
+//   preEvent = event;
 
-  if (isTargetMouseMove) {
-    isTargetMouseMove = false;
-    return;
-  }
-  targetFollowMode = true;
-  mouseDownTarget = event.target;
-}
+//   if (isTargetMouseMove) {
+//     isTargetMouseMove = false;
+//     return;
+//   }
+//   targetFollowMode = true;
+//   mouseDownTarget = event.target;
+// }
 
 function targetTouchStartEvent(event) {
   console.log("target: " + event.type);
@@ -264,7 +284,7 @@ targetList.forEach((target, idx) => {
   target.addEventListener('mousedown', targetMouseDownEvent);
   target.addEventListener('mouseup', targetMouseUpEvent);
   target.addEventListener('click', targetClickEvent);
-  target.addEventListener('dblclick', targetDblClickEvent);
+  // target.addEventListener('dblclick', targetDblClickEvent);
 
   target.addEventListener('touchstart', targetTouchStartEvent);
   target.addEventListener('touchend', targetTouchEndEvent);
