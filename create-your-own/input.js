@@ -54,30 +54,6 @@ const workspaceMouseMoveEvent = function (event) {
   }
 };
 
-const workspaceTouchMoveEvent = function (event) {
-  if (isWorkspaceMouseDown &&
-    (workspaceMouseX !== event.clientX || workspaceMouseY !== event.clientY)) {
-    isWorkspaceMouseMove = true;
-  }
-
-  if ((isTargetMouseDown || targetFollowMode) &&
-    (targetMouseX !== event.clientX || targetMouseY !== event.clientY)) {
-    isTargetMouseMove = true;
-  }
-
-  if (isTargetMouseDown || targetFollowMode) {
-    let topPosition = parseInt(mouseDownTarget.style.top.substring(0, mouseDownTarget.style.top.length - 2));
-    let leftPosition = parseInt(mouseDownTarget.style.left.substring(0, mouseDownTarget.style.left.length - 2));
-
-    topPosition = "" + (topPosition + event.touches[event.touches.length - 1].clientY - targetMouseY) + "px";
-    leftPosition = "" + (leftPosition + event.touches[event.touches.length - 1].clientX - targetMouseX) + "px";
-    mouseDownTarget.style.top = topPosition;
-    mouseDownTarget.style.left = leftPosition;
-    targetMouseX = event.touches[event.touches.length - 1].clientX;
-    targetMouseY = event.touches[event.touches.length - 1].clientY;
-  }
-};
-
 const workspaceMouseUpEvent = function (event) {
   isWorkspaceMouseDown = false;
 };
@@ -85,6 +61,11 @@ const workspaceMouseUpEvent = function (event) {
 const workspaceMouseClickEvent = function (event) {
   if (isWorkspaceMouseMove) {
     isWorkspaceMouseMove = false;
+    return;
+  }
+
+  if (targetFollowMode) {
+    targetFollowMode = false;
     return;
   }
 
@@ -113,6 +94,30 @@ const workspaceTouchStartEvent = function (event) {
   isWorkspaceMouseMove = false;
   workspaceMouseX = event.touches[event.touches.length - 1].clientX;
   workspaceMouseY = event.touches[event.touches.length - 1].clientY;
+};
+
+const workspaceTouchMoveEvent = function (event) {
+  if (isWorkspaceMouseDown &&
+    (workspaceMouseX !== event.clientX || workspaceMouseY !== event.clientY)) {
+    isWorkspaceMouseMove = true;
+  }
+
+  if ((isTargetMouseDown || targetFollowMode) &&
+    (targetMouseX !== event.clientX || targetMouseY !== event.clientY)) {
+    isTargetMouseMove = true;
+  }
+
+  if (isTargetMouseDown || targetFollowMode) {
+    let topPosition = parseInt(mouseDownTarget.style.top.substring(0, mouseDownTarget.style.top.length - 2));
+    let leftPosition = parseInt(mouseDownTarget.style.left.substring(0, mouseDownTarget.style.left.length - 2));
+
+    topPosition = "" + (topPosition + event.touches[event.touches.length - 1].clientY - targetMouseY) + "px";
+    leftPosition = "" + (leftPosition + event.touches[event.touches.length - 1].clientX - targetMouseX) + "px";
+    mouseDownTarget.style.top = topPosition;
+    mouseDownTarget.style.left = leftPosition;
+    targetMouseX = event.touches[event.touches.length - 1].clientX;
+    targetMouseY = event.touches[event.touches.length - 1].clientY;
+  }
 };
 
 const workspaceTouchEndEvent = function (event) {
