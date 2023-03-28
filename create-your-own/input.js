@@ -26,16 +26,21 @@ let originTargetTop, originTargetLeft;
 let targetFollowMode = false;
 
 function workspaceMouseDownEvent(event) {
+  preEvent = event;
+
   isWorkspaceMouseDown = true;
   isWorkspaceMouseMove = false;
   workspaceMouseX = event.clientX;
   workspaceMouseY = event.clientY;
-
-  preEvent = event;
 }
 
 function workspaceMouseMoveEvent(event) {
-  if (preEvent.type === 'touchend' && event.type === 'mousemove') { return; }
+  if (preEvent.type === 'touchend' && event.type === 'mousemove') {
+    preEvent = event;
+    return;
+  }
+
+  preEvent = event;
 
   if (isWorkspaceMouseDown &&
     (workspaceMouseX !== event.clientX || workspaceMouseY !== event.clientY)) {
@@ -58,17 +63,17 @@ function workspaceMouseMoveEvent(event) {
     targetMouseX = event.clientX;
     targetMouseY = event.clientY;
   }
-
-  preEvent = event;
 }
 
 function workspaceMouseUpEvent(event) {
-  isWorkspaceMouseDown = false;
-
   preEvent = event;
+
+  isWorkspaceMouseDown = false;
 }
 
 function workspaceMouseClickEvent(event) {
+  preEvent = event;
+
   if (isWorkspaceMouseMove || targetFollowMode) {
     isWorkspaceMouseMove = false;
     targetFollowMode = false;
@@ -79,11 +84,11 @@ function workspaceMouseClickEvent(event) {
     clickedTarget.style.backgroundColor = 'red';
     clickedTarget = undefined;
   }
-
-  preEvent = event;
 }
 
 function workspaceKeyboardEscapeEvent(event) {
+  preEvent = event;
+
   if (event.code !== 'Escape') { return; }
 
   isTargetMouseDown = false;
@@ -95,11 +100,11 @@ function workspaceKeyboardEscapeEvent(event) {
     mouseDownTarget.style.left = originTargetLeft;
   }
   mouseDownTarget = undefined;
-
-  preEvent = event;
 }
 
 function workspaceTouchStartEvent(event) {
+  preEvent = event;
+
   if (event.touches.length > 1) {
     isTargetMouseDown = false;
     isTargetMouseMove = false;
@@ -115,11 +120,11 @@ function workspaceTouchStartEvent(event) {
   isWorkspaceMouseMove = false;
   workspaceMouseX = event.touches[event.touches.length - 1].clientX;
   workspaceMouseY = event.touches[event.touches.length - 1].clientY;
-
-  preEvent = event;
 }
 
 function workspaceTouchMoveEvent(event) {
+  preEvent = event;
+
   if (isWorkspaceMouseDown &&
     (workspaceMouseX !== event.clientX || workspaceMouseY !== event.clientY)) {
     isWorkspaceMouseMove = true;
@@ -141,17 +146,17 @@ function workspaceTouchMoveEvent(event) {
     targetMouseX = event.touches[event.touches.length - 1].clientX;
     targetMouseY = event.touches[event.touches.length - 1].clientY;
   }
-
-  preEvent = event;
 }
 
 function workspaceTouchEndEvent(event) {
-  isWorkspaceMouseDown = false;
-
   preEvent = event;
+
+  isWorkspaceMouseDown = false;
 }
 
 function targetMouseDownEvent(event) {
+  preEvent = event;
+
   isTargetMouseDown = true;
   isTargetMouseMove = false;
   mouseDownTarget = event.target;
@@ -159,20 +164,20 @@ function targetMouseDownEvent(event) {
   targetMouseY = event.clientY;
   originTargetTop = event.target.style.top;
   originTargetLeft = event.target.style.left;
-
-  preEvent = event;
 }
 
 function targetMouseUpEvent(event) {
+  preEvent = event;
+
   isTargetMouseDown = false;
   if (isTargetMouseMove || targetFollowMode) {
     mouseDownTarget = undefined;
   }
-
-  preEvent = event;
 }
 
 function targetClickEvent(event) {
+  preEvent = event;
+
   if (targetFollowMode) {
     targetFollowMode = false;
     isTargetMouseMove = false;
@@ -190,22 +195,24 @@ function targetClickEvent(event) {
   clickedTarget = event.target;
   clickedTarget.style.backgroundColor = '#00f';
   event.stopPropagation();
-
-  preEvent = event;
 }
 
 function targetDblClickEvent(event) {
+  preEvent = event;
+
   if (isTargetMouseMove) {
     isTargetMouseMove = false;
     return;
   }
   targetFollowMode = true;
   mouseDownTarget = event.target;
-
-  preEvent = event;
 }
 
 function targetTouchStartEvent(event) {
+  preEvent = event;
+
+  if (targetFollowMode) { return; }
+
   isTargetMouseDown = true;
   isTargetMouseMove = false;
   mouseDownTarget = event.target;
@@ -213,17 +220,17 @@ function targetTouchStartEvent(event) {
   targetMouseY = event.touches[event.touches.length - 1].clientY;
   originTargetTop = event.target.style.top;
   originTargetLeft = event.target.style.left;
-
-  preEvent = event;
 }
 
 function targetTouchEndEvent(event) {
+  preEvent = event;
+
+  if (targetFollowMode) { return; }
+
   isTargetMouseDown = false;
   if (isTargetMouseMove) {
     mouseDownTarget = undefined;
   }
-
-  preEvent = event;
 }
 
 workspace.setAttribute('tabindex', -1);
