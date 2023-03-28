@@ -90,6 +90,17 @@ const workspaceKeyboardEscapeEvent = function (event) {
 };
 
 const workspaceTouchStartEvent = function (event) {
+  if (event.toches.length > 1) {
+    isTargetMouseDown = false;
+    isTargetMouseMove = false;
+    targetFollowMode = false;
+    if (mouseDownTarget !== undefined) {
+      mouseDownTarget.style.top = originTargetTop;
+      mouseDownTarget.style.left = originTargetLeft;
+    }
+    mouseDownTarget = undefined;
+  }
+
   isWorkspaceMouseDown = true;
   isWorkspaceMouseMove = false;
   workspaceMouseX = event.touches[event.touches.length - 1].clientX;
@@ -149,7 +160,6 @@ const targetClickEvent = function (event) {
     return;
   }
   if (isTargetMouseMove) {
-    isTargetMouseMove = false;
     event.stopPropagation();
     return;
   }
@@ -163,6 +173,10 @@ const targetClickEvent = function (event) {
 };
 
 const targetDblClickEvent = function (event) {
+  if (isTargetMouseMove) {
+    isTargetMouseMove = false;
+    return;
+  }
   targetFollowMode = true;
   mouseDownTarget = event.target;
 };
