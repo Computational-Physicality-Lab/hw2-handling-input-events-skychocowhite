@@ -90,7 +90,7 @@ const workspaceKeyboardEscapeEvent = function (event) {
 };
 
 const workspaceTouchStartEvent = function (event) {
-  if (event.toches.length > 1) {
+  if (event.touches.length > 1) {
     isTargetMouseDown = false;
     isTargetMouseMove = false;
     targetFollowMode = false;
