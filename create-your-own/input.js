@@ -26,6 +26,7 @@ let originTargetTop, originTargetLeft;
 let targetFollowMode = false;
 
 function workspaceMouseDownEvent(event) {
+  console.log("workspace: " + event.type);
   preEvent = event;
 
   isWorkspaceMouseDown = true;
@@ -35,6 +36,7 @@ function workspaceMouseDownEvent(event) {
 }
 
 function workspaceMouseMoveEvent(event) {
+  console.log("workspace: " + event.type);
   if (preEvent.type === 'touchend' && event.type === 'mousemove') {
     preEvent = event;
     return;
@@ -72,6 +74,7 @@ function workspaceMouseUpEvent(event) {
 }
 
 function workspaceMouseClickEvent(event) {
+  console.log("workspace: " + event.type);
   preEvent = event;
 
   if (isWorkspaceMouseMove || targetFollowMode) {
@@ -87,6 +90,7 @@ function workspaceMouseClickEvent(event) {
 }
 
 function workspaceKeyboardEscapeEvent(event) {
+  console.log("workspace: " + event.type);
   preEvent = event;
 
   if (event.code !== 'Escape') { return; }
@@ -103,6 +107,7 @@ function workspaceKeyboardEscapeEvent(event) {
 }
 
 function workspaceTouchStartEvent(event) {
+  console.log("workspace: " + event.type);
   preEvent = event;
 
   if (event.touches.length > 1) {
@@ -123,6 +128,7 @@ function workspaceTouchStartEvent(event) {
 }
 
 function workspaceTouchMoveEvent(event) {
+  console.log("workspace: " + event.type);
   preEvent = event;
 
   if (isWorkspaceMouseDown &&
@@ -149,12 +155,14 @@ function workspaceTouchMoveEvent(event) {
 }
 
 function workspaceTouchEndEvent(event) {
+  console.log("workspace: " + event.type);
   preEvent = event;
 
   isWorkspaceMouseDown = false;
 }
 
 function targetMouseDownEvent(event) {
+  console.log("target: " + event.target);
   preEvent = event;
 
   isTargetMouseDown = true;
@@ -167,6 +175,7 @@ function targetMouseDownEvent(event) {
 }
 
 function targetMouseUpEvent(event) {
+  console.log("target: " + event.target);
   preEvent = event;
 
   isTargetMouseDown = false;
@@ -176,6 +185,7 @@ function targetMouseUpEvent(event) {
 }
 
 function targetClickEvent(event) {
+  console.log("target: " + event.target);
   preEvent = event;
 
   if (targetFollowMode) {
@@ -198,6 +208,7 @@ function targetClickEvent(event) {
 }
 
 function targetDblClickEvent(event) {
+  console.log("target: " + event.target);
   preEvent = event;
 
   if (isTargetMouseMove) {
@@ -209,6 +220,8 @@ function targetDblClickEvent(event) {
 }
 
 function targetTouchStartEvent(event) {
+  console.log("target: " + event.type);
+
   preEvent = event;
 
   if (targetFollowMode) { return; }
@@ -223,6 +236,8 @@ function targetTouchStartEvent(event) {
 }
 
 function targetTouchEndEvent(event) {
+  console.log("target: " + event.target);
+
   preEvent = event;
 
   if (targetFollowMode) { return; }
