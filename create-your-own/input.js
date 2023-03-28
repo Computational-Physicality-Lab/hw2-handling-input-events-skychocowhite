@@ -10,6 +10,8 @@ of the interaction.
 const workspace = document.getElementById('workspace');
 const targetList = document.querySelectorAll('.target');
 
+let preEvent;
+
 let isWorkspaceMouseDown = false;
 let isWorkspaceMouseMove = false;
 let workspaceMouseX, workspaceMouseY;
@@ -23,14 +25,18 @@ let originTargetTop, originTargetLeft;
 
 let targetFollowMode = false;
 
-const workspaceMouseDownEvent = function (event) {
+function workspaceMouseDownEvent(event) {
   isWorkspaceMouseDown = true;
   isWorkspaceMouseMove = false;
   workspaceMouseX = event.clientX;
   workspaceMouseY = event.clientY;
-};
 
-const workspaceMouseMoveEvent = function (event) {
+  preEvent = event;
+}
+
+function workspaceMouseMoveEvent(event) {
+  if (preEvent.type === 'touchend' && event.type === 'mousemove') { return; }
+
   if (isWorkspaceMouseDown &&
     (workspaceMouseX !== event.clientX || workspaceMouseY !== event.clientY)) {
     isWorkspaceMouseMove = true;
@@ -52,31 +58,32 @@ const workspaceMouseMoveEvent = function (event) {
     targetMouseX = event.clientX;
     targetMouseY = event.clientY;
   }
-};
 
-const workspaceMouseUpEvent = function (event) {
+  preEvent = event;
+}
+
+function workspaceMouseUpEvent(event) {
   isWorkspaceMouseDown = false;
-};
 
-const workspaceMouseClickEvent = function (event) {
+  preEvent = event;
+}
+
+function workspaceMouseClickEvent(event) {
   if (isWorkspaceMouseMove || targetFollowMode) {
     isWorkspaceMouseMove = false;
     targetFollowMode = false;
     return;
   }
 
-  // if (targetFollowMode) {
-  //   targetFollowMode = false;
-  //   return;
-  // }
-
   if (clickedTarget !== undefined) {
     clickedTarget.style.backgroundColor = 'red';
     clickedTarget = undefined;
   }
-};
 
-const workspaceKeyboardEscapeEvent = function (event) {
+  preEvent = event;
+}
+
+function workspaceKeyboardEscapeEvent(event) {
   if (event.code !== 'Escape') { return; }
 
   isTargetMouseDown = false;
@@ -88,9 +95,11 @@ const workspaceKeyboardEscapeEvent = function (event) {
     mouseDownTarget.style.left = originTargetLeft;
   }
   mouseDownTarget = undefined;
-};
 
-const workspaceTouchStartEvent = function (event) {
+  preEvent = event;
+}
+
+function workspaceTouchStartEvent(event) {
   if (event.touches.length > 1) {
     isTargetMouseDown = false;
     isTargetMouseMove = false;
@@ -106,9 +115,11 @@ const workspaceTouchStartEvent = function (event) {
   isWorkspaceMouseMove = false;
   workspaceMouseX = event.touches[event.touches.length - 1].clientX;
   workspaceMouseY = event.touches[event.touches.length - 1].clientY;
-};
 
-const workspaceTouchMoveEvent = function (event) {
+  preEvent = event;
+}
+
+function workspaceTouchMoveEvent(event) {
   if (isWorkspaceMouseDown &&
     (workspaceMouseX !== event.clientX || workspaceMouseY !== event.clientY)) {
     isWorkspaceMouseMove = true;
@@ -130,13 +141,17 @@ const workspaceTouchMoveEvent = function (event) {
     targetMouseX = event.touches[event.touches.length - 1].clientX;
     targetMouseY = event.touches[event.touches.length - 1].clientY;
   }
-};
 
-const workspaceTouchEndEvent = function (event) {
+  preEvent = event;
+}
+
+function workspaceTouchEndEvent(event) {
   isWorkspaceMouseDown = false;
-};
 
-const targetMouseDownEvent = function (event) {
+  preEvent = event;
+}
+
+function targetMouseDownEvent(event) {
   isTargetMouseDown = true;
   isTargetMouseMove = false;
   mouseDownTarget = event.target;
@@ -144,16 +159,20 @@ const targetMouseDownEvent = function (event) {
   targetMouseY = event.clientY;
   originTargetTop = event.target.style.top;
   originTargetLeft = event.target.style.left;
-};
 
-const targetMouseUpEvent = function (event) {
+  preEvent = event;
+}
+
+function targetMouseUpEvent(event) {
   isTargetMouseDown = false;
   if (isTargetMouseMove || targetFollowMode) {
     mouseDownTarget = undefined;
   }
-};
 
-const targetClickEvent = function (event) {
+  preEvent = event;
+}
+
+function targetClickEvent(event) {
   if (targetFollowMode) {
     targetFollowMode = false;
     isTargetMouseMove = false;
@@ -171,18 +190,22 @@ const targetClickEvent = function (event) {
   clickedTarget = event.target;
   clickedTarget.style.backgroundColor = '#00f';
   event.stopPropagation();
-};
 
-const targetDblClickEvent = function (event) {
+  preEvent = event;
+}
+
+function targetDblClickEvent(event) {
   if (isTargetMouseMove) {
     isTargetMouseMove = false;
     return;
   }
   targetFollowMode = true;
   mouseDownTarget = event.target;
-};
 
-const targetTouchStartEvent = function (event) {
+  preEvent = event;
+}
+
+function targetTouchStartEvent(event) {
   isTargetMouseDown = true;
   isTargetMouseMove = false;
   mouseDownTarget = event.target;
@@ -190,14 +213,18 @@ const targetTouchStartEvent = function (event) {
   targetMouseY = event.touches[event.touches.length - 1].clientY;
   originTargetTop = event.target.style.top;
   originTargetLeft = event.target.style.left;
-};
 
-const targetTouchEndEvent = function (event) {
+  preEvent = event;
+}
+
+function targetTouchEndEvent(event) {
   isTargetMouseDown = false;
   if (isTargetMouseMove || targetFollowMode) {
     mouseDownTarget = undefined;
   }
-};
+
+  preEvent = event;
+}
 
 workspace.setAttribute('tabindex', -1);
 workspace.focus();
