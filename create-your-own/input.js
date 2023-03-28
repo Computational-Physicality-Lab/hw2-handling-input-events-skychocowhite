@@ -59,15 +59,16 @@ const workspaceMouseUpEvent = function (event) {
 };
 
 const workspaceMouseClickEvent = function (event) {
-  if (isWorkspaceMouseMove) {
+  if (isWorkspaceMouseMove || targetFollowMode) {
     isWorkspaceMouseMove = false;
-    return;
-  }
-
-  if (targetFollowMode) {
     targetFollowMode = false;
     return;
   }
+
+  // if (targetFollowMode) {
+  //   targetFollowMode = false;
+  //   return;
+  // }
 
   if (clickedTarget !== undefined) {
     clickedTarget.style.backgroundColor = 'red';
