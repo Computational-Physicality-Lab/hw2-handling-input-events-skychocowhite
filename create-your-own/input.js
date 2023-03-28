@@ -219,7 +219,7 @@ function targetTouchStartEvent(event) {
 
 function targetTouchEndEvent(event) {
   isTargetMouseDown = false;
-  if (isTargetMouseMove || targetFollowMode) {
+  if (isTargetMouseMove) {
     mouseDownTarget = undefined;
   }
 
