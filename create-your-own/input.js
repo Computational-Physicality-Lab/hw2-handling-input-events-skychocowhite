@@ -155,6 +155,7 @@ function workspaceTouchMoveEvent(event) {
 
     let widthOffset = abs(firstFingerPos.x - secondFingerPos.x) - abs(prevFirstFingerPos.x - prevSecondFingerPos.x);
 
+    console.log(widthOffset);
     targetWidth = "" + (targetWidth + widthOffset) + "px";
     clickedTarget.style.width = targetWidth;
     prevFirstFingerPos = firstFingerPos;
@@ -238,7 +239,7 @@ function targetClickEvent(event) {
   let currentTime = new Date().getTime();
   let clickTimeOffset = currentTime - lastTargetClickTime;
   lastTargetClickTime = currentTime;
-  if (clickTimeOffset < 300) {
+  if (clickTimeOffset < 300 && clickedTarget === event.target) {
     event.stopPropagation();
 
     console.log('target: dblclick');
