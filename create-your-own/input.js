@@ -115,6 +115,7 @@ function workspaceTouchStartEvent(event) {
 
   let currentTime = new Date().getTime();
   let touchTimeOffset = currentTime - lastWorkspaceTouchTime;
+  lastWorkspaceTouchTime = currentTime;
   if (touchTimeOffset < 50 && event.touches.length === 2) {
     twoFingerMode = true;
     prevFirstFingerPos = { x: event.touches[0].clientX, y: event.touches[0].clientY };
@@ -235,6 +236,7 @@ function targetClickEvent(event) {
 
   let currentTime = new Date().getTime();
   let clickTimeOffset = currentTime - lastTargetClickTime;
+  lastTargetClickTime = currentTime;
   if (clickTimeOffset < 300) {
     event.stopPropagation();
 
@@ -248,7 +250,6 @@ function targetClickEvent(event) {
     return;
   }
 
-  lastTargetClickTime = currentTime;
   if (clickedTarget !== event.clickedTarget) {
     clickedTarget.style.backgroundColor = 'red';
   }
