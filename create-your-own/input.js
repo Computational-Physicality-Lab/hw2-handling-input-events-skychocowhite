@@ -83,6 +83,7 @@ function workspaceMouseClickEvent(event) {
   if (isWorkspaceMouseMove || targetFollowMode) {
     isWorkspaceMouseMove = false;
     targetFollowMode = false;
+    mouseDownTarget = undefined;
     return;
   }
 
