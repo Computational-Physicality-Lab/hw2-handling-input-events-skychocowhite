@@ -117,6 +117,7 @@ function workspaceTouchStartEvent(event) {
   let currentTime = new Date().getTime();
   let touchTimeOffset = currentTime - lastWorkspaceTouchTime;
   lastWorkspaceTouchTime = currentTime;
+  console.log("touch time offset: " + touchTimeOffset);
   if (touchTimeOffset < 50 && event.touches.length === 2) {
     twoFingerMode = true;
     prevFirstFingerPos = { x: event.touches[0].clientX, y: event.touches[0].clientY };
