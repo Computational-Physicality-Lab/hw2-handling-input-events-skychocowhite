@@ -145,6 +145,38 @@ function workspaceMouseClickEvent(event) {
   }
 }
 
+function workspaceKeyboardEscapeEvent(event) {
+  console.log("workspace: " + event.type);
+  console.log("state: " + curState);
+
+  if (event.key !== 'Escape') { return; }
+
+  if (curState === States.MOUSE_TOUCH_DOWN_ON_TARGET ||
+    curState === States.MOVE_TARGET ||
+    curState === States.FOLLOW_MODE) {
+
+    if (mouseDownTarget !== undefined) {
+      mouseDownTarget.style.top = originTargetTop;
+      mouseDownTarget.style.left = originTargetLeft;
+    }
+
+    if (curState === States.MOUSE_TOUCH_DOWN_ON_TARGET ||
+      curState === States.MOVE_TARGET) {
+
+      mouseDownTarget = undefined;
+      if (clickedTarget !== undefined) {
+        curState = States.TARGET_SELECTED;
+      }
+      else {
+        curState = States.IDLE;
+      }
+    }
+    else if (curState === States.FOLLOW_MODE) {
+      curState = States.TARGET_SELECTED;
+    }
+  }
+}
+
 function targetMouseDownEvent(event) {
   console.log("target: " + event.type);
   console.log("state: " + curState);
@@ -239,12 +271,24 @@ function targetMouseClickEvent(event) {
   }
 }
 
+// function targetTouchStartEvent(event) {
+//   console.log("target: " + event.type);
+//   console.log("state: " + curState);
+
+//   targetPreEvent = event;
+
+//   if (curState === States.IDLE) {
+
+//   }
+// }
+
 workspace.setAttribute('tabindex', -1);
 workspace.focus();
 workspace.addEventListener('mousedown', workspaceMouseDownEvent);
 workspace.addEventListener('mousemove', workspaceMouseMoveEvent);
 workspace.addEventListener('mouseup', workspaceMouseUpEvent);
 workspace.addEventListener('click', workspaceMouseClickEvent);
+workspace.addEventListener('keydown', workspaceKeyboardEscapeEvent);
 
 targetList.forEach((target, idx) => {
   target.addEventListener('mousedown', targetMouseDownEvent);
