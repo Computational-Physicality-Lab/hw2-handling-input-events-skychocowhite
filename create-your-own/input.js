@@ -15,20 +15,23 @@ let preEvent;
 let isWorkspaceMouseDown = false;
 let isWorkspaceMouseMove = false;
 let workspaceMouseX, workspaceMouseY;
+let twoFingerMode = false;
+let prevFirstFingerPos = { x: 0, y: 0 }, prevSecondFingerPos = { x: 0, y: 0 };
+let lastWorkspaceTouchTime = 0;
 
+let targetMinLength = 10;
 let isTargetMouseDown = false;
 let isTargetMouseMove = false;
 let mouseDownTarget;
 let clickedTarget;
 let targetMouseX, targetMouseY;
 let originTargetTop, originTargetLeft;
-
 let targetFollowMode = false;
+let lastTargetClickTime = 0;
 
 function workspaceMouseDownEvent(event) {
   console.log("workspace: " + event.type);
   preEvent = event;
-
   isWorkspaceMouseDown = true;
   isWorkspaceMouseMove = false;
   workspaceMouseX = event.clientX;
@@ -110,6 +113,15 @@ function workspaceTouchStartEvent(event) {
   console.log("workspace: " + event.type);
   preEvent = event;
 
+  let currentTime = new Date().getTime();
+  let touchTimeOffset = currentTime - lastWorkspaceTouchTime;
+  if (touchTimeOffset < 50 && event.touches.length === 2) {
+    twoFingerMode = true;
+    prevFirstFingerPos = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+    prevSecondFingerPos = { x: event.touches[1].clientX, y: event.touches[1].clientY };
+    return;
+  }
+
   if (event.touches.length > 1) {
     isTargetMouseDown = false;
     isTargetMouseMove = false;
@@ -130,6 +142,24 @@ function workspaceTouchStartEvent(event) {
 function workspaceTouchMoveEvent(event) {
   console.log("workspace: " + event.type);
   preEvent = event;
+
+  if (twoFingerMode && event.touches.length === 2) {
+    if (clickedTarget === undefined) { return; }
+
+    let targetWidth = parseInt(clickedTarget.style.width.substring(0, clickedTarget.style.width.length - 2));
+    let targetHeight = parseInt(clickedTarget.style.height.substring(0, clickedTarget.style.height.length - 2));
+    let firstFingerPos = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+    let secondFingerPos = { x: event.touches[1].clientX, y: event.touches[1].clientY };
+
+    let widthOffset = abs(firstFingerPos.x - secondFingerPos.x) - abs(prevFirstFingerPos.x - prevSecondFingerPos.x);
+
+    targetWidth = "" + (targetWidth + widthOffset) + "px";
+    clickedTarget.style.width = targetWidth;
+    prevFirstFingerPos = firstFingerPos;
+    prevSecondFingerPos = secondFingerPos;
+
+    return;
+  }
 
   if (isWorkspaceMouseDown &&
     (workspaceMouseX !== event.clientX || workspaceMouseY !== event.clientY)) {
@@ -158,6 +188,10 @@ function workspaceTouchEndEvent(event) {
   console.log("workspace: " + event.type);
   preEvent = event;
 
+  if (event.touches.length < 2) {
+    twoFingerMode = false;
+  }
+
   isWorkspaceMouseDown = false;
 }
 
@@ -184,8 +218,6 @@ function targetMouseUpEvent(event) {
   }
 }
 
-let lastTouchTime = 0;
-
 function targetClickEvent(event) {
   console.log("target: " + event.type);
   preEvent = event;
@@ -202,13 +234,11 @@ function targetClickEvent(event) {
   }
 
   let currentTime = new Date().getTime();
-  let clickTimeOffset = currentTime - lastTouchTime;
-  if (clickTimeOffset < 500) {
+  let clickTimeOffset = currentTime - lastTargetClickTime;
+  if (clickTimeOffset < 300) {
     event.stopPropagation();
 
-    // console.log("target: " + event.type);
-    // preEvent = event;
-    console.log('target: double click event');
+    console.log('target: dblclick');
     if (isTargetMouseMove) {
       isTargetMouseMove = false;
       return;
@@ -218,7 +248,7 @@ function targetClickEvent(event) {
     return;
   }
 
-  lastTouchTime = currentTime;
+  lastTargetClickTime = currentTime;
   if (clickedTarget !== event.clickedTarget) {
     clickedTarget.style.backgroundColor = 'red';
   }
@@ -226,18 +256,6 @@ function targetClickEvent(event) {
   clickedTarget.style.backgroundColor = '#00f';
   event.stopPropagation();
 }
-
-// function targetDblClickEvent(event) {
-//   console.log("target: " + event.type);
-//   preEvent = event;
-
-//   if (isTargetMouseMove) {
-//     isTargetMouseMove = false;
-//     return;
-//   }
-//   targetFollowMode = true;
-//   mouseDownTarget = event.target;
-// }
 
 function targetTouchStartEvent(event) {
   console.log("target: " + event.type);
@@ -284,7 +302,6 @@ targetList.forEach((target, idx) => {
   target.addEventListener('mousedown', targetMouseDownEvent);
   target.addEventListener('mouseup', targetMouseUpEvent);
   target.addEventListener('click', targetClickEvent);
-  // target.addEventListener('dblclick', targetDblClickEvent);
 
   target.addEventListener('touchstart', targetTouchStartEvent);
   target.addEventListener('touchend', targetTouchEndEvent);
