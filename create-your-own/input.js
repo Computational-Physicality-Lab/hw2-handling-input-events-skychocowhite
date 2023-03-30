@@ -187,23 +187,48 @@ function workspaceTouchStartEvent(event) {
 
   workspacePreEvent = event;
 
-  if (curState === States.IDLE ||
-    curState === States.TARGET_SELECTED ||
-    curState === States.FOLLOW_MODE) {
-
-    workspaceMouseX = event.touches[0].clientX;
-    workspaceMouseY = event.touches[0].clientY;
-
+  if (event.touches.length === 1) {
     if (curState === States.IDLE ||
-      curState === States.TARGET_SELECTED) {
+      curState === States.TARGET_SELECTED ||
+      curState === States.FOLLOW_MODE) {
 
-      curState = States.MOUSE_TOUCH_DOWN_ON_BACKGROUND;
-    }
-    else if (curState === States.FOLLOW_MODE) {
-      curState = States.FOLLOW_MODE_TOUCH_DOWN;
+      workspaceMouseX = event.touches[0].clientX;
+      workspaceMouseY = event.touches[0].clientY;
+
+      if (curState === States.IDLE ||
+        curState === States.TARGET_SELECTED) {
+
+        curState = States.MOUSE_TOUCH_DOWN_ON_BACKGROUND;
+      }
+      else if (curState === States.FOLLOW_MODE) {
+        curState = States.FOLLOW_MODE_TOUCH_DOWN;
+      }
     }
   }
+  else if (event.touches.length === 2) {
+    if (curState === States.MOUSE_TOUCH_DOWN_ON_TARGET ||
+      curState === States.MOVE_TARGET ||
+      curState === States.FOLLOW_MODE_TOUCH_DOWN ||
+      curState === States.FOLLOW_MODE_TOUCH_MOVE) {
 
+      if (mouseDownTarget !== undefined) {
+        mouseDownTarget.style.top = originTargetTop;
+        mouseDownTarget.style.left = originTargetLeft;
+      }
+      mouseDownTarget = undefined;
+
+      if (curState === States.MOUSE_TOUCH_DOWN_ON_TARGET ||
+        curState === States.MOVE_TARGET) {
+
+        curState = States.IDLE;
+      }
+      else if (curState === States.FOLLOW_MODE_TOUCH_DOWN ||
+        curState === States.FOLLOW_MODE_TOUCH_MOVE) {
+
+        curState = States.TARGET_SELECTED;
+      }
+    }
+  }
 }
 
 function workspaceTouchMoveEvent(event) {
