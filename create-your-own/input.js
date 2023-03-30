@@ -30,8 +30,6 @@ let curState = States.IDLE;
 let workspacePreEvent;
 let targetPreEvent;
 
-// let isWorkspaceMouseDown = false;
-// let isWorkspaceMouseMove = false;
 let workspaceMouseX, workspaceMouseY;
 // let twoFingerMode = false;
 // let prevFirstFingerPos = { x: 0, y: 0 }, prevSecondFingerPos = { x: 0, y: 0 };
@@ -74,7 +72,10 @@ function workspaceMouseMoveEvent(event) {
   console.log("workspace: " + event.type);
   console.log("state: " + curState);
 
-  if (targetPreEvent === 'touchend') { return; }
+  if (targetPreEvent.type === 'touchend') {
+    console.log("skip mousemove due to click event");
+    return;
+  }
 
   workspacePreEvent = event;
 
@@ -355,12 +356,12 @@ function targetTouchEndEvent(event) {
   if (event.touches.length === 0) {
     if (curState === States.MOVE_TARGET) {
       mouseDownTarget = undefined;
-      // if (clickedTarget === undefined) {
-      //   curState = States.IDLE;
-      // }
-      // else {
-      //   curState = States.TARGET_SELECTED;
-      // }
+      if (clickedTarget === undefined) {
+        curState = States.IDLE;
+      }
+      else {
+        curState = States.TARGET_SELECTED;
+      }
     }
     else if (curState === States.FOLLOW_MODE_TOUCH_MOVE) {
       curState = States.FOLLOW_MODE;
