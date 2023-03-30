@@ -177,6 +177,46 @@ function workspaceKeyboardEscapeEvent(event) {
   }
 }
 
+function workspaceTouchMoveEvent(event) {
+  console.log("workspace: " + event.type);
+  console.log("state: " + curState);
+
+  workspacePreEvent = event;
+
+  if (event.touches.length === 1) {
+    if (curState === States.MOUSE_TOUCH_DOWN_ON_TARGET ||
+      curState === States.MOVE_TARGET ||
+      curState === States.MOUSE_TOUCH_DOWN_ON_SAME_TARGET ||
+      curState === States.FOLLOW_MODE_TOUCH_DOWN) {
+
+      if (targetMouseX === event.touches[0].clientX && targetMouseY === event.touches[0].clientY) { return; }
+
+
+      let topPosition = parseInt(mouseDownTarget.style.top.substring(0, mouseDownTarget.style.top.length - 2));
+      let leftPosition = parseInt(mouseDownTarget.style.left.substring(0, mouseDownTarget.style.left.length - 2));
+
+      topPosition = "" + (topPosition + event.touches[0].clientY - targetMouseY);
+      leftPosition = "" + (leftPosition + event.touches[0].clientX - targetMouseX);
+      mouseDownTarget.style.top = topPosition;
+      mouseDownTarget.style.left = leftPosition;
+      targetMouseX = event.touches[0].clientX;
+      targetMouseY = event.touches[0].clientY;
+
+      switch (curState) {
+        case States.MOUSE_TOUCH_DOWN_ON_TARGET:
+          curState = States.MOVE_TARGET;
+          break;
+        case States.MOUSE_TOUCH_DOWN_ON_SAME_TARGET:
+          curState = States.MOVE_TARGET;
+          break;
+        case States.FOLLOW_MODE_TOUCH_DOWN:
+          curState = States.FOLLOW_MODE_TOUCH_MOVE;
+          break;
+      }
+    }
+  }
+}
+
 function targetMouseDownEvent(event) {
   console.log("target: " + event.type);
   console.log("state: " + curState);
@@ -254,13 +294,10 @@ function targetMouseClickEvent(event) {
     clickedTarget = event.target;
     clickedTarget.style.backgroundColor = '#00f';
 
-    switch (curState) {
-      case States.MOUSE_TOUCH_DOWN_ON_TARGET:
-        curState = States.TARGET_SELECTED;
-        break;
+    if (curState === States.MOUSE_TOUCH_DOWN_ON_TARGET) {
+      curState = States.TARGET_SELECTED;
     }
-
-    if (curState === States.MOUSE_TOUCH_DOWN_ON_SAME_TARGET) {
+    else if (curState === States.MOUSE_TOUCH_DOWN_ON_SAME_TARGET) {
       if (timeOffset <= 300 && preClickedTarget === event.target) {
         curState = States.FOLLOW_MODE;
       }
@@ -269,29 +306,82 @@ function targetMouseClickEvent(event) {
       }
     }
   }
+  else if (curState === States.FOLLOW_MODE_TOUCH_DOWN) {
+    mouseDownTarget = undefined;
+    curState = States.TARGET_SELECTED;
+  }
 }
 
-// function targetTouchStartEvent(event) {
-//   console.log("target: " + event.type);
-//   console.log("state: " + curState);
+function targetTouchStartEvent(event) {
+  console.log("target: " + event.type);
+  console.log("state: " + curState);
 
-//   targetPreEvent = event;
+  targetPreEvent = event;
 
-//   if (curState === States.IDLE) {
+  if (event.touches.length === 1) {
+    if (curState === States.IDLE ||
+      curState === States.TARGET_SELECTED ||
+      curState === States.FOLLOW_MODE) {
 
-//   }
-// }
+      mouseDownTarget = event.target;
+      targetMouseX = event.touches[0].clientX;
+      targetMouseY = event.touches[0].clientY;
+      originTargetTop = event.target.style.top;
+      originTargetLeft = event.target.style.left;
+
+      if (curState === States.IDLE) {
+        curState = States.MOUSE_TOUCH_DOWN_ON_TARGET;
+      }
+      else if (curState === States.TARGET_SELECTED) {
+        if (clickedTarget === event.target) {
+          curState = States.MOUSE_TOUCH_DOWN_ON_SAME_TARGET;
+        }
+        else {
+          curState = States.MOUSE_TOUCH_DOWN_ON_TARGET;
+        }
+      }
+      else if (curState === States.FOLLOW_MODE) {
+        curState = States.FOLLOW_MODE_TOUCH_DOWN;
+      }
+    }
+  }
+}
+
+function targetTouchEndEvent(event) {
+  console.log("target: " + event.type);
+  console.log("state: " + curState);
+
+  targetPreEvent = event;
+
+  if (curState === States.MOVE_TARGET) {
+    mouseDownTarget = undefined;
+    if (clickedTarget === undefined) {
+      curState = States.IDLE;
+    }
+    else {
+      curState = States.TARGET_SELECTED;
+    }
+  }
+  else if (curState === States.FOLLOW_MODE_TOUCH_MOVE) {
+    curState = States.FOLLOW_MODE;
+  }
+}
 
 workspace.setAttribute('tabindex', -1);
 workspace.focus();
+
 workspace.addEventListener('mousedown', workspaceMouseDownEvent);
 workspace.addEventListener('mousemove', workspaceMouseMoveEvent);
 workspace.addEventListener('mouseup', workspaceMouseUpEvent);
 workspace.addEventListener('click', workspaceMouseClickEvent);
 workspace.addEventListener('keydown', workspaceKeyboardEscapeEvent);
 
+workspace.addEventListener('touchmove', workspaceTouchMoveEvent);
+
 targetList.forEach((target, idx) => {
   target.addEventListener('mousedown', targetMouseDownEvent);
   target.addEventListener('mouseup', targetMouseUpEvent);
   target.addEventListener('click', targetMouseClickEvent);
+
+  target.addEventListener('touchstart', targetTouchStartEvent);
 });
