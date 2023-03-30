@@ -74,7 +74,7 @@ function workspaceMouseMoveEvent(event) {
   console.log("workspace: " + event.type);
   console.log("state: " + curState);
 
-  if (workspacePreEvent === 'touchend') { return; }
+  if (targetPreEvent === 'touchend') { return; }
 
   workspacePreEvent = event;
 
@@ -191,12 +191,11 @@ function workspaceTouchMoveEvent(event) {
 
       if (targetMouseX === event.touches[0].clientX && targetMouseY === event.touches[0].clientY) { return; }
 
-
       let topPosition = parseInt(mouseDownTarget.style.top.substring(0, mouseDownTarget.style.top.length - 2));
       let leftPosition = parseInt(mouseDownTarget.style.left.substring(0, mouseDownTarget.style.left.length - 2));
 
-      topPosition = "" + (topPosition + event.touches[0].clientY - targetMouseY);
-      leftPosition = "" + (leftPosition + event.touches[0].clientX - targetMouseX);
+      topPosition = "" + (topPosition + event.touches[0].clientY - targetMouseY) + "px";
+      leftPosition = "" + (leftPosition + event.touches[0].clientX - targetMouseX) + "px";
       mouseDownTarget.style.top = topPosition;
       mouseDownTarget.style.left = leftPosition;
       targetMouseX = event.touches[0].clientX;
@@ -369,12 +368,11 @@ function targetTouchEndEvent(event) {
 
 workspace.setAttribute('tabindex', -1);
 workspace.focus();
-
+workspace.addEventListener('keydown', workspaceKeyboardEscapeEvent);
 workspace.addEventListener('mousedown', workspaceMouseDownEvent);
 workspace.addEventListener('mousemove', workspaceMouseMoveEvent);
 workspace.addEventListener('mouseup', workspaceMouseUpEvent);
 workspace.addEventListener('click', workspaceMouseClickEvent);
-workspace.addEventListener('keydown', workspaceKeyboardEscapeEvent);
 
 workspace.addEventListener('touchmove', workspaceTouchMoveEvent);
 
@@ -384,4 +382,5 @@ targetList.forEach((target, idx) => {
   target.addEventListener('click', targetMouseClickEvent);
 
   target.addEventListener('touchstart', targetTouchStartEvent);
+  target.addEventListener('touchend', targetTouchEndEvent);
 });
