@@ -72,7 +72,7 @@ function workspaceMouseMoveEvent(event) {
   console.log("workspace: " + event.type);
   console.log("state: " + curState);
 
-  if (targetPreEvent.type === 'touchend') {
+  if (targetPreEvent.type === 'touchend' || workspacePreEvent.type === 'touchend') {
     console.log("skip mousemove due to click event");
     return;
   }
@@ -144,6 +144,9 @@ function workspaceMouseClickEvent(event) {
     clickedTarget = undefined;
     curState = States.IDLE;
   }
+  else if (curState === States.FOLLOW_MODE_TOUCH_DOWN) {
+    curState = States.TARGET_SELECTED;
+  }
 }
 
 function workspaceKeyboardEscapeEvent(event) {
@@ -178,6 +181,31 @@ function workspaceKeyboardEscapeEvent(event) {
   }
 }
 
+function workspaceTouchStartEvent(event) {
+  console.log('workspace: ' + event.type);
+  console.log('state: ' + curState);
+
+  workspacePreEvent = event;
+
+  if (curState === States.IDLE ||
+    curState === States.TARGET_SELECTED ||
+    curState === States.FOLLOW_MODE) {
+
+    workspaceMouseX = event.touches[0].clientX;
+    workspaceMouseY = event.touches[0].clientY;
+
+    if (curState === States.IDLE ||
+      curState === States.TARGET_SELECTED) {
+
+      curState = States.MOUSE_TOUCH_DOWN_ON_BACKGROUND;
+    }
+    else if (curState === States.FOLLOW_MODE) {
+      curState = States.FOLLOW_MODE_TOUCH_DOWN;
+    }
+  }
+
+}
+
 function workspaceTouchMoveEvent(event) {
   console.log("workspace: " + event.type);
   console.log("state: " + curState);
@@ -188,7 +216,8 @@ function workspaceTouchMoveEvent(event) {
     if (curState === States.MOUSE_TOUCH_DOWN_ON_TARGET ||
       curState === States.MOVE_TARGET ||
       curState === States.MOUSE_TOUCH_DOWN_ON_SAME_TARGET ||
-      curState === States.FOLLOW_MODE_TOUCH_DOWN) {
+      curState === States.FOLLOW_MODE_TOUCH_DOWN ||
+      curState === States.FOLLOW_MODE_TOUCH_MOVE) {
 
       if (targetMouseX === event.touches[0].clientX && targetMouseY === event.touches[0].clientY) { return; }
 
@@ -214,6 +243,32 @@ function workspaceTouchMoveEvent(event) {
           break;
       }
     }
+    else if (curState === States.MOUSE_TOUCH_DOWN_ON_BACKGROUND) {
+      if (workspaceMouseX === event.touches[0].clientX && workspaceMouseY === event.touches[0].clientY) { return; }
+
+      workspaceMouseX = event.touches[0].clientX;
+      workspaceMouseY = event.touches[0].clientY;
+      curState = States.MOVE_BACKGROUND;
+    }
+  }
+}
+
+function workspaceTouchEndEvent(event) {
+  console.log("workspace: " + event.type);
+  console.log("state: " + curState);
+
+  workspacePreEvent = event;
+
+  if (curState === States.MOVE_BACKGROUND) {
+    if (clickedTarget === undefined) {
+      curState = States.IDLE;
+    }
+    else {
+      curState = States.TARGET_SELECTED;
+    }
+  }
+  else if (curState === States.FOLLOW_MODE_TOUCH_MOVE) {
+    curState = States.FOLLOW_MODE;
   }
 }
 
@@ -298,7 +353,8 @@ function targetMouseClickEvent(event) {
       curState = States.TARGET_SELECTED;
     }
     else if (curState === States.MOUSE_TOUCH_DOWN_ON_SAME_TARGET) {
-      if (timeOffset <= 300 && preClickedTarget === event.target) {
+      console.log("double click time offset: " + timeOffset);
+      if (timeOffset <= 350 && preClickedTarget === event.target) {
         curState = States.FOLLOW_MODE;
       }
       else {
@@ -320,8 +376,7 @@ function targetTouchStartEvent(event) {
 
   if (event.touches.length === 1) {
     if (curState === States.IDLE ||
-      curState === States.TARGET_SELECTED ||
-      curState === States.FOLLOW_MODE) {
+      curState === States.TARGET_SELECTED) {
 
       mouseDownTarget = event.target;
       targetMouseX = event.touches[0].clientX;
@@ -340,9 +395,9 @@ function targetTouchStartEvent(event) {
           curState = States.MOUSE_TOUCH_DOWN_ON_TARGET;
         }
       }
-      else if (curState === States.FOLLOW_MODE) {
-        curState = States.FOLLOW_MODE_TOUCH_DOWN;
-      }
+    }
+    else if (curState === States.FOLLOW_MODE) {
+      curState = States.FOLLOW_MODE_TOUCH_DOWN;
     }
   }
 }
@@ -377,7 +432,9 @@ workspace.addEventListener('mousemove', workspaceMouseMoveEvent);
 workspace.addEventListener('mouseup', workspaceMouseUpEvent);
 workspace.addEventListener('click', workspaceMouseClickEvent);
 
+workspace.addEventListener('touchstart', workspaceTouchStartEvent);
 workspace.addEventListener('touchmove', workspaceTouchMoveEvent);
+workspace.addEventListener('touchend', workspaceTouchEndEvent);
 
 targetList.forEach((target, idx) => {
   target.addEventListener('mousedown', targetMouseDownEvent);
