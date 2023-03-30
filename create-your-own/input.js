@@ -352,17 +352,19 @@ function targetTouchEndEvent(event) {
 
   targetPreEvent = event;
 
-  if (curState === States.MOVE_TARGET) {
-    mouseDownTarget = undefined;
-    if (clickedTarget === undefined) {
-      curState = States.IDLE;
+  if (event.touches.length === 0) {
+    if (curState === States.MOVE_TARGET) {
+      mouseDownTarget = undefined;
+      // if (clickedTarget === undefined) {
+      //   curState = States.IDLE;
+      // }
+      // else {
+      //   curState = States.TARGET_SELECTED;
+      // }
     }
-    else {
-      curState = States.TARGET_SELECTED;
+    else if (curState === States.FOLLOW_MODE_TOUCH_MOVE) {
+      curState = States.FOLLOW_MODE;
     }
-  }
-  else if (curState === States.FOLLOW_MODE_TOUCH_MOVE) {
-    curState = States.FOLLOW_MODE;
   }
 }
 
