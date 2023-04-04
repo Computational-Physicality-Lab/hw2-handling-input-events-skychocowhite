@@ -35,7 +35,7 @@ let workspaceMouseX, workspaceMouseY;
 let prevFirstFingerPos = { x: 0, y: 0 }, prevSecondFingerPos = { x: 0, y: 0 };
 let lastWorkspaceTouchTime = 0;
 
-let targetMinLength = 10;
+let targetMinLength = 60;
 let mouseDownTarget;
 let preClickedTarget;
 let clickedTarget;
