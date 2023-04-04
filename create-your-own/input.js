@@ -21,6 +21,7 @@ const States = {
   SCALE_MODE: 'ScaleMode',
   SCALE_MODE_IDLE: 'ScaleModeIdle',
   SCALE_MODE_NO_TARGET: 'ScaleModeNoTarget',
+  SCALE_MODE_ABORT: 'ScaleModeAbort',
 };
 
 const workspace = document.getElementById('workspace');
@@ -235,8 +236,12 @@ function workspaceTouchStartEvent(event) {
         curState = States.TARGET_SELECTED;
       }
     }
-    else if (curState === States.MOUSE_TOUCH_DOWN_ON_BACKGROUND) {
-      if (clickedTarget !== undefined && timeOffset < 50) {
+    else if (curState === States.MOUSE_TOUCH_DOWN_ON_BACKGROUND ||
+      curState === States.TARGET_SELECTED) {
+
+      if ((clickedTarget !== undefined && timeOffset < 50) ||
+        curState === States.TARGET_SELECTED) {
+
         curState = States.SCALE_MODE;
         originTargetWidth = clickedTarget.style.width;
         originTargetHeight = clickedTarget.style.height;
@@ -250,6 +255,25 @@ function workspaceTouchStartEvent(event) {
           scaleModeDirection = 1;
         }
       }
+      else if (curState === States.SCALE_MODE_IDLE) {
+        curState = States.SCALE_MODE;
+
+        prevFirstFingerPos = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+        prevSecondFingerPos = { x: event.touches[1].clientX, y: event.touches[1].clientY };
+        if (Math.abs(event.touches[0].clientX - event.touches[1].clientX) >= Math.abs(event.touches[0].clientY - event.touches[1].clientY)) {
+          scaleModeDirection = 0;
+        }
+        else {
+          scaleModeDirection = 1;
+        }
+      }
+    }
+  }
+  else if (event.touches.length === 3) {
+    if (curState === States.SCALE_MODE) {
+      clickedTarget.style.width = originTargetWidth;
+      clickedTarget.style.height = originTargetHeight;
+      curState = States.SCALE_MODE_ABORT;
     }
   }
 }
@@ -326,21 +350,33 @@ function workspaceTouchMoveEvent(event) {
 }
 
 function workspaceTouchEndEvent(event) {
-  console.log("workspace: " + event.type);
+  console.log("workspace: " + event.type + "(" + event.touches.length + ")");
   console.log("state: " + curState);
 
   workspacePreEvent = event;
 
-  if (curState === States.MOVE_BACKGROUND) {
-    if (clickedTarget === undefined) {
-      curState = States.IDLE;
+  if (event.touches.length === 0) {
+    if (curState === States.MOVE_BACKGROUND) {
+      if (clickedTarget === undefined) {
+        curState = States.IDLE;
+      }
+      else {
+        curState = States.TARGET_SELECTED;
+      }
     }
-    else {
+    else if (curState === States.FOLLOW_MODE_TOUCH_MOVE) {
+      curState = States.FOLLOW_MODE;
+    }
+    else if (curState === States.SCALE_MODE_ABORT ||
+      curState === States.SCALE_MODE_IDLE) {
+
       curState = States.TARGET_SELECTED;
     }
   }
-  else if (curState === States.FOLLOW_MODE_TOUCH_MOVE) {
-    curState = States.FOLLOW_MODE;
+  else if (event.touches.length === 1) {
+    if (curState === States.SCALE_MODE) {
+      curState = States.SCALE_MODE_IDLE;
+    }
   }
 }
 
