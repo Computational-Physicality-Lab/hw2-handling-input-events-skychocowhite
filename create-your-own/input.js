@@ -254,6 +254,7 @@ function workspaceTouchMoveEvent(event) {
   workspacePreEvent = event;
 
   if (event.touches.length === 1) {
+    console.log("here1");
     if (curState === States.MOUSE_TOUCH_DOWN_ON_TARGET ||
       curState === States.MOVE_TARGET ||
       curState === States.MOUSE_TOUCH_DOWN_ON_SAME_TARGET ||
