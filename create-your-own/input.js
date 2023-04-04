@@ -86,8 +86,8 @@ function workspaceMouseMoveEvent(event) {
 
     if (targetMouseX === event.clientX && targetMouseY === event.clientY) { return; }
 
-    let topPosition = parseInt(mouseDownTarget.style.top.substring(0, mouseDownTarget.style.top.length - 2));
-    let leftPosition = parseInt(mouseDownTarget.style.left.substring(0, mouseDownTarget.style.left.length - 2));
+    let topPosition = parseFloat(mouseDownTarget.style.top.substring(0, mouseDownTarget.style.top.length - 2));
+    let leftPosition = parseFloat(mouseDownTarget.style.left.substring(0, mouseDownTarget.style.left.length - 2));
 
     topPosition = "" + (topPosition + event.clientY - targetMouseY) + "px";
     leftPosition = "" + (leftPosition + event.clientX - targetMouseX) + "px";
@@ -298,8 +298,8 @@ function workspaceTouchMoveEvent(event) {
 
       if (targetMouseX === event.touches[0].clientX && targetMouseY === event.touches[0].clientY) { return; }
 
-      let topPosition = parseInt(mouseDownTarget.style.top.substring(0, mouseDownTarget.style.top.length - 2));
-      let leftPosition = parseInt(mouseDownTarget.style.left.substring(0, mouseDownTarget.style.left.length - 2));
+      let topPosition = parseFloat(mouseDownTarget.style.top.substring(0, mouseDownTarget.style.top.length - 2));
+      let leftPosition = parseFloat(mouseDownTarget.style.left.substring(0, mouseDownTarget.style.left.length - 2));
 
       topPosition = "" + (topPosition + event.touches[0].clientY - targetMouseY) + "px";
       leftPosition = "" + (leftPosition + event.touches[0].clientX - targetMouseX) + "px";
@@ -334,11 +334,11 @@ function workspaceTouchMoveEvent(event) {
       let secondFingerPos = { x: event.touches[1].clientX, y: event.touches[1].clientY };
 
       if (scaleModeDirection === 0) {
-        let width = parseInt(clickedTarget.style.width.substring(0, clickedTarget.style.width.length - 2));
+        let width = parseFloat(clickedTarget.style.width.substring(0, clickedTarget.style.width.length - 2));
         let widthOffset = Math.abs(firstFingerPos.x - secondFingerPos.x) - Math.abs(prevFirstFingerPos.x - prevSecondFingerPos.x);
 
         if (width + widthOffset > targetMinLength) {
-          let left = parseInt(clickedTarget.style.left.substring(0, clickedTarget.style.left.length - 2));
+          let left = parseFloat(clickedTarget.style.left.substring(0, clickedTarget.style.left.length - 2));
           left = "" + (left - widthOffset / 2) + "px";
           clickedTarget.style.left = left;
         }
@@ -346,11 +346,11 @@ function workspaceTouchMoveEvent(event) {
         clickedTarget.style.width = width;
       }
       else {
-        let height = parseInt(clickedTarget.style.height.substring(0, clickedTarget.style.height.length - 2));
+        let height = parseFloat(clickedTarget.style.height.substring(0, clickedTarget.style.height.length - 2));
         let heightOffset = Math.abs(firstFingerPos.y - secondFingerPos.y) - Math.abs(prevFirstFingerPos.y - prevSecondFingerPos.y);
 
         if (height + heightOffset > targetMinLength) {
-          let top = parseInt(clickedTarget.style.top.substring(0, clickedTarget.style.top.length - 2));
+          let top = parseFloat(clickedTarget.style.top.substring(0, clickedTarget.style.top.length - 2));
           top = "" + (top - heightOffset / 2) + "px";
           clickedTarget.style.top = top;
         }
