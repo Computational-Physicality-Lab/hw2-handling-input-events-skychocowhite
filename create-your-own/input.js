@@ -56,15 +56,7 @@ function workspaceMouseDownEvent(event) {
 
     workspaceMouseX = event.clientX;
     workspaceMouseY = event.clientY;
-
-    switch (curState) {
-      case States.IDLE:
-        curState = States.MOUSE_TOUCH_DOWN_ON_BACKGROUND;
-        break;
-      case States.TARGET_SELECTED:
-        curState = States.MOUSE_TOUCH_DOWN_ON_BACKGROUND;
-        break;
-    }
+    curState = States.MOUSE_TOUCH_DOWN_ON_BACKGROUND;
   }
 }
 
@@ -96,13 +88,10 @@ function workspaceMouseMoveEvent(event) {
     targetMouseX = event.clientX;
     targetMouseY = event.clientY;
 
-    switch (curState) {
-      case States.MOUSE_TOUCH_DOWN_ON_TARGET:
-        curState = States.MOVE_TARGET;
-        break;
-      case States.MOUSE_TOUCH_DOWN_ON_SAME_TARGET:
-        curState = States.MOVE_TARGET;
-        break;
+    if (curState === States.MOUSE_TOUCH_DOWN_ON_TARGET ||
+      curState === States.MOUSE_TOUCH_DOWN_ON_SAME_TARGET) {
+
+      curState = States.MOVE_TARGET;
     }
   }
 
@@ -240,35 +229,25 @@ function workspaceTouchStartEvent(event) {
       curState === States.TARGET_SELECTED ||
       curState === States.SCALE_MODE_IDLE) {
 
+
       if ((clickedTarget !== undefined && timeOffset < 50) ||
         curState === States.TARGET_SELECTED) {
 
-        curState = States.SCALE_MODE;
         originTargetWidth = clickedTarget.style.width;
         originTargetHeight = clickedTarget.style.height;
         originTargetLeft = clickedTarget.style.left;
         originTargetTop = clickedTarget.style.top;
-        prevFirstFingerPos = { x: event.touches[0].clientX, y: event.touches[0].clientY };
-        prevSecondFingerPos = { x: event.touches[1].clientX, y: event.touches[1].clientY };
-
-        if (Math.abs(event.touches[0].clientX - event.touches[1].clientX) >= Math.abs(event.touches[0].clientY - event.touches[1].clientY)) {
-          scaleModeDirection = 0;
-        }
-        else {
-          scaleModeDirection = 1;
-        }
       }
-      else if (curState === States.SCALE_MODE_IDLE) {
-        curState = States.SCALE_MODE;
 
-        prevFirstFingerPos = { x: event.touches[0].clientX, y: event.touches[0].clientY };
-        prevSecondFingerPos = { x: event.touches[1].clientX, y: event.touches[1].clientY };
-        if (Math.abs(event.touches[0].clientX - event.touches[1].clientX) >= Math.abs(event.touches[0].clientY - event.touches[1].clientY)) {
-          scaleModeDirection = 0;
-        }
-        else {
-          scaleModeDirection = 1;
-        }
+      curState = States.SCALE_MODE;
+      prevFirstFingerPos = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+      prevSecondFingerPos = { x: event.touches[1].clientX, y: event.touches[1].clientY };
+
+      if (Math.abs(event.touches[0].clientX - event.touches[1].clientX) >= Math.abs(event.touches[0].clientY - event.touches[1].clientY)) {
+        scaleModeDirection = 0;
+      }
+      else {
+        scaleModeDirection = 1;
       }
     }
   }
