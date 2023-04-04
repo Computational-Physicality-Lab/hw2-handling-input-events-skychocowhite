@@ -245,6 +245,8 @@ function workspaceTouchStartEvent(event) {
         curState = States.SCALE_MODE;
         originTargetWidth = clickedTarget.style.width;
         originTargetHeight = clickedTarget.style.height;
+        originTargetLeft = clickedTarget.style.left;
+        originTargetTop = clickedTarget.style.top;
         prevFirstFingerPos = { x: event.touches[0].clientX, y: event.touches[0].clientY };
         prevSecondFingerPos = { x: event.touches[1].clientX, y: event.touches[1].clientY };
 
@@ -273,6 +275,8 @@ function workspaceTouchStartEvent(event) {
     if (curState === States.SCALE_MODE) {
       clickedTarget.style.width = originTargetWidth;
       clickedTarget.style.height = originTargetHeight;
+      clickedTarget.style.left = originTargetLeft;
+      clickedTarget.style.top = originTargetTop;
       curState = States.SCALE_MODE_ABORT;
     }
   }
@@ -332,6 +336,11 @@ function workspaceTouchMoveEvent(event) {
         let width = parseInt(clickedTarget.style.width.substring(0, clickedTarget.style.width.length - 2));
         let widthOffset = Math.abs(firstFingerPos.x - secondFingerPos.x) - Math.abs(prevFirstFingerPos.x - prevSecondFingerPos.x);
 
+        if (width + widthOffset > targetMinLength) {
+          let left = parseInt(clickedTarget.style.left.substring(0, clickedTarget.style.left.length - 2));
+          left = "" + (left + widthOffset / 2) + "px";
+          clickedTarget.style.left = left;
+        }
         width = "" + (Math.max(width + widthOffset, targetMinLength)) + "px";
         clickedTarget.style.width = width;
       }
@@ -396,12 +405,10 @@ function targetMouseDownEvent(event) {
     originTargetTop = event.target.style.top;
     originTargetLeft = event.target.style.left;
 
-    switch (curState) {
-      case States.IDLE:
-        curState = States.MOUSE_TOUCH_DOWN_ON_TARGET;
-        break;
+    if (curState === States.IDLE) {
+      curState = States.MOUSE_TOUCH_DOWN_ON_TARGET;
     }
-    if (curState === States.TARGET_SELECTED) {
+    else if (curState === States.TARGET_SELECTED) {
       if (clickedTarget !== event.target) {
         curState = States.MOUSE_TOUCH_DOWN_ON_TARGET;
       }
