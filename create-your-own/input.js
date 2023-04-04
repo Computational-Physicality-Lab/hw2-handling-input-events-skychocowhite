@@ -293,6 +293,7 @@ function workspaceTouchMoveEvent(event) {
     }
   }
   else if (event.touches.length === 2) {
+    console.log("here");
     if (curState === States.SCALE_MODE) {
       let firstFingerPos = { x: event.touches[0].clientX, y: event.touches[0].clientY };
       let secondFingerPos = { x: event.touches[1].clientX, y: event.touches[1].clientY };
