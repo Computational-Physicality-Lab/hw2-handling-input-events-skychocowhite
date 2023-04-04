@@ -299,8 +299,8 @@ function workspaceTouchMoveEvent(event) {
       let secondFingerPos = { x: event.touches[1].clientX, y: event.touches[1].clientY };
       let width = parseInt(clickedTarget.style.width.substring(0, clickedTarget.style.width.length - 2));
       let height = parseInt(clickedTarget.style.height.substring(0, clickedTarget.style.height.length - 2));
-      let widthOffset = abs(firstFingerPos.x - secondFingerPos.x) - abs(prevFirstFingerPos.x - prevSecondFingerPos.x);
-      let heightOffset = abs(firstFingerPos.y - secondFingerPos.y) - abs(prevFirstFingerPos.y - prevSecondFingerPos.y);
+      let widthOffset = Math.abs(firstFingerPos.x - secondFingerPos.x) - Math.abs(prevFirstFingerPos.x - prevSecondFingerPos.x);
+      let heightOffset = Math.abs(firstFingerPos.y - secondFingerPos.y) - Math.abs(prevFirstFingerPos.y - prevSecondFingerPos.y);
 
       console.log("widthOffset: " + widthOffset);
 
