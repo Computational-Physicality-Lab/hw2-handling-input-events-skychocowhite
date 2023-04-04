@@ -32,6 +32,7 @@ let targetPreEvent;
 
 let workspaceMouseX, workspaceMouseY;
 let prevFirstFingerPos = { x: 0, y: 0 }, prevSecondFingerPos = { x: 0, y: 0 };
+let scaleModeDirection = 0; // 0 for horizontal, 1 for vertical
 let lastWorkspaceTouchTime = 0;
 
 let targetMinLength = 60;
@@ -241,6 +242,13 @@ function workspaceTouchStartEvent(event) {
         originTargetHeight = clickedTarget.style.height;
         prevFirstFingerPos = { x: event.touches[0].clientX, y: event.touches[0].clientY };
         prevSecondFingerPos = { x: event.touches[1].clientX, y: event.touches[1].clientY };
+
+        if (Math.abs(event.touches[0].clientX - event.touches[1].clientX) >= Math.abs(event.touches[0].clientY - event.touches[1].clientY)) {
+          scaleModeDirection = 0;
+        }
+        else {
+          scaleModeDirection = 1;
+        }
       }
     }
   }
@@ -295,11 +303,22 @@ function workspaceTouchMoveEvent(event) {
     if (curState === States.SCALE_MODE) {
       let firstFingerPos = { x: event.touches[0].clientX, y: event.touches[0].clientY };
       let secondFingerPos = { x: event.touches[1].clientX, y: event.touches[1].clientY };
-      let width = parseInt(clickedTarget.style.width.substring(0, clickedTarget.style.width.length - 2));
-      let widthOffset = Math.abs(firstFingerPos.x - secondFingerPos.x) - Math.abs(prevFirstFingerPos.x - prevSecondFingerPos.x);
 
-      width = "" + (Math.max(width + widthOffset, targetMinLength)) + "px";
-      clickedTarget.style.width = width;
+      if (scaleModeDirection === 0) {
+        let width = parseInt(clickedTarget.style.width.substring(0, clickedTarget.style.width.length - 2));
+        let widthOffset = Math.abs(firstFingerPos.x - secondFingerPos.x) - Math.abs(prevFirstFingerPos.x - prevSecondFingerPos.x);
+
+        width = "" + (Math.max(width + widthOffset, targetMinLength)) + "px";
+        clickedTarget.style.width = width;
+      }
+      else {
+        let height = parseInt(clickedTarget.style.height.substring(0, clickedTarget.style.height.length - 2));
+        let heightOffset = Math.abs(firstFingerPos.y - secondFingerPos.y) - Math.abs(prevFirstFingerPos.y - prevSecondFingerPos.y);
+
+        height = "" + (Math.max(height + heightOffset, targetMinLength)) + "px";
+        clickedTarget.style.height = height;
+      }
+
       prevFirstFingerPos = firstFingerPos;
       prevSecondFingerPos = secondFingerPos;
     }
