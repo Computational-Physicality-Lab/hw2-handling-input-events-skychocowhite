@@ -237,7 +237,8 @@ function workspaceTouchStartEvent(event) {
       }
     }
     else if (curState === States.MOUSE_TOUCH_DOWN_ON_BACKGROUND ||
-      curState === States.TARGET_SELECTED) {
+      curState === States.TARGET_SELECTED ||
+      curState === States.SCALE_MODE_IDLE) {
 
       if ((clickedTarget !== undefined && timeOffset < 50) ||
         curState === States.TARGET_SELECTED) {
