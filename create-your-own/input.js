@@ -368,7 +368,8 @@ function workspaceTouchEndEvent(event) {
       curState = States.FOLLOW_MODE;
     }
     else if (curState === States.SCALE_MODE_ABORT ||
-      curState === States.SCALE_MODE_IDLE) {
+      curState === States.SCALE_MODE_IDLE ||
+      curState === States.SCALE_MODE) {
 
       curState = States.TARGET_SELECTED;
     }
