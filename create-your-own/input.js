@@ -32,17 +32,16 @@ let targetPreEvent;
 
 let workspaceMouseX, workspaceMouseY;
 // let twoFingerMode = false;
-// let prevFirstFingerPos = { x: 0, y: 0 }, prevSecondFingerPos = { x: 0, y: 0 };
-// let lastWorkspaceTouchTime = 0;
+let prevFirstFingerPos = { x: 0, y: 0 }, prevSecondFingerPos = { x: 0, y: 0 };
+let lastWorkspaceTouchTime = 0;
 
-// let targetMinLength = 10;
-// let isTargetMouseDown = false;
+let targetMinLength = 10;
 let mouseDownTarget;
 let preClickedTarget;
 let clickedTarget;
 let targetMouseX, targetMouseY;
 let originTargetTop, originTargetLeft;
-// let targetFollowMode = false;
+let originTargetWidth, originTargetHeight;
 let lastTargetClickTime = 0;
 
 function workspaceMouseDownEvent(event) {
@@ -157,7 +156,9 @@ function workspaceKeyboardEscapeEvent(event) {
 
   if (curState === States.MOUSE_TOUCH_DOWN_ON_TARGET ||
     curState === States.MOVE_TARGET ||
-    curState === States.FOLLOW_MODE) {
+    curState === States.FOLLOW_MODE ||
+    curState === States.FOLLOW_MODE_TOUCH_DOWN ||
+    curState === States.FOLLOW_MODE_TOUCH_MOVE) {
 
     if (mouseDownTarget !== undefined) {
       mouseDownTarget.style.top = originTargetTop;
@@ -175,17 +176,23 @@ function workspaceKeyboardEscapeEvent(event) {
         curState = States.IDLE;
       }
     }
-    else if (curState === States.FOLLOW_MODE) {
+    else if (curState === States.FOLLOW_MODE ||
+      curState === States.FOLLOW_MODE_TOUCH_DOWN ||
+      curState === States.FOLLOW_MODE_TOUCH_MOVE) {
+
       curState = States.TARGET_SELECTED;
     }
   }
 }
 
 function workspaceTouchStartEvent(event) {
-  console.log('workspace: ' + event.type);
+  console.log('workspace: ' + event.type + "(" + event.touches.length + ")");
   console.log('state: ' + curState);
 
   workspacePreEvent = event;
+  let currentTime = new Date().getTime();
+  let timeOffset = currentTime - lastWorkspaceTouchTime;
+  lastWorkspaceTouchTime = currentTime;
 
   if (event.touches.length === 1) {
     if (curState === States.IDLE ||
@@ -226,6 +233,15 @@ function workspaceTouchStartEvent(event) {
         curState === States.FOLLOW_MODE_TOUCH_MOVE) {
 
         curState = States.TARGET_SELECTED;
+      }
+    }
+    else if (curState === States.MOUSE_TOUCH_DOWN_ON_BACKGROUND) {
+      if (clickedTarget !== undefined && timeOffset < 50) {
+        curState = States.SCALE_MODE;
+        originTargetWidth = clickedTarget.style.width;
+        originTargetHeight = clickedTarget.style.height;
+        prevFirstFingerPos = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+        prevSecondFingerPos = { x: event.touches[1].clientX, y: event.touches[1].clientY };
       }
     }
   }
@@ -274,6 +290,20 @@ function workspaceTouchMoveEvent(event) {
       workspaceMouseX = event.touches[0].clientX;
       workspaceMouseY = event.touches[0].clientY;
       curState = States.MOVE_BACKGROUND;
+    }
+  }
+  else if (event.touches.length === 2) {
+    if (curState === States.SCALE_MODE) {
+      let firstFingerPos = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+      let secondFingerPos = { x: event.touches[1].clientX, y: event.touches[1].clientY };
+      let width = parseInt(clickedTarget.style.width.substring(0, clickedTarget.style.width.length - 2));
+      let height = parseInt(clickedTarget.style.height.substring(0, clickedTarget.style.height.length - 2));
+
+      let widthOffset = abs(firstFingerPos.x - secondFingerPos.x) - abs(prevFirstFingerPos.x - prevSecondFingerPos.x);
+      let heightOffset = abs(firstFingerPos.y - secondFingerPos.y) - abs(prevFirstFingerPos.y - prevSecondFingerPos.y);
+
+      width = "" + (width + widthOffset) + "px";
+      clickedTarget.style.width = width;
     }
   }
 }
