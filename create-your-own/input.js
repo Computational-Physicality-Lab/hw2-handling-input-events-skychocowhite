@@ -254,7 +254,6 @@ function workspaceTouchMoveEvent(event) {
   workspacePreEvent = event;
 
   if (event.touches.length === 1) {
-    console.log("here1");
     if (curState === States.MOUSE_TOUCH_DOWN_ON_TARGET ||
       curState === States.MOVE_TARGET ||
       curState === States.MOUSE_TOUCH_DOWN_ON_SAME_TARGET ||
@@ -295,6 +294,7 @@ function workspaceTouchMoveEvent(event) {
   }
   else if (event.touches.length === 2) {
     console.log("here");
+    console.log(curState);
     if (curState === States.SCALE_MODE) {
       let firstFingerPos = { x: event.touches[0].clientX, y: event.touches[0].clientY };
       let secondFingerPos = { x: event.touches[1].clientX, y: event.touches[1].clientY };
