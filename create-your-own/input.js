@@ -293,7 +293,6 @@ function workspaceTouchMoveEvent(event) {
     }
   }
   else if (event.touches.length === 2) {
-    console.log("here");
     if (curState === States.SCALE_MODE) {
       let firstFingerPos = { x: event.touches[0].clientX, y: event.touches[0].clientY };
       let secondFingerPos = { x: event.touches[1].clientX, y: event.touches[1].clientY };
@@ -302,6 +301,8 @@ function workspaceTouchMoveEvent(event) {
       let widthOffset = Math.abs(firstFingerPos.x - secondFingerPos.x) - Math.abs(prevFirstFingerPos.x - prevSecondFingerPos.x);
       let heightOffset = Math.abs(firstFingerPos.y - secondFingerPos.y) - Math.abs(prevFirstFingerPos.y - prevSecondFingerPos.y);
 
+
+      width = "" + (width + widthOffset) + "px";
       clickedTarget.style.width = width;
       prevFirstFingerPos = firstFingerPos;
       prevSecondFingerPos = secondFingerPos;
