@@ -248,7 +248,7 @@ function workspaceTouchStartEvent(event) {
 }
 
 function workspaceTouchMoveEvent(event) {
-  console.log("workspace: " + event.type);
+  console.log("workspace: " + event.type + "(" + event.touches.length + ")");
   console.log("state: " + curState);
 
   workspacePreEvent = event;
