@@ -338,7 +338,7 @@ function workspaceTouchMoveEvent(event) {
 
         if (width + widthOffset > targetMinLength) {
           let left = parseInt(clickedTarget.style.left.substring(0, clickedTarget.style.left.length - 2));
-          left = "" + (left + widthOffset / 2) + "px";
+          left = "" + (left - widthOffset / 2) + "px";
           clickedTarget.style.left = left;
         }
         width = "" + (Math.max(width + widthOffset, targetMinLength)) + "px";
