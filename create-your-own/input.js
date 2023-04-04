@@ -348,6 +348,11 @@ function workspaceTouchMoveEvent(event) {
         let height = parseInt(clickedTarget.style.height.substring(0, clickedTarget.style.height.length - 2));
         let heightOffset = Math.abs(firstFingerPos.y - secondFingerPos.y) - Math.abs(prevFirstFingerPos.y - prevSecondFingerPos.y);
 
+        if (height + heightOffset > targetMinLength) {
+          let top = parseInt(clickedTarget.style.top.substring(0, clickedTarget.style.top.length - 2));
+          top = "" + (top - heightOffset / 2) + "px";
+          clickedTarget.style.top = top;
+        }
         height = "" + (Math.max(height + heightOffset, targetMinLength)) + "px";
         clickedTarget.style.height = height;
       }
